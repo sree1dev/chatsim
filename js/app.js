@@ -374,22 +374,25 @@
 
   /** ========== Script I/O ========== */
   function loadScriptFromTextarea() {
-    try {
-      const data = JSON.parse(els.scriptInput.value);
-      if (!Array.isArray(data)) throw new Error("Script must be an array");
-      for (const m of data) {
-        if (m.from !== "me" && m.from !== "friend")
-          throw new Error("Each item needs from:'me'|'friend'");
-        if (typeof m.text !== "string")
-          throw new Error("Each item needs text:string");
+  try{
+    if(document.getElementById("scriptEditor")){
+      script = parseEditorToScript();
+    } else {
+      const ta = (typeof els!=="undefined" && els.scriptInput) ? els.scriptInput : document.getElementById("scriptInput");
+      const data = JSON.parse(ta.value);
+      if(!Array.isArray(data)) throw new Error("Script must be an array.");
+      for(const m of data){
+        if(m.from!=="me" && m.from!=="friend") throw new Error("Each item needs from:'me'|'friend'");
+        if(typeof m.text!=="string") throw new Error("Each item needs text:string");
       }
       script = data;
-      resetPlayback();
-      toast("Script loaded.");
-    } catch (e) {
-      alert("Invalid script JSON:\n" + e.message);
     }
+    resetPlayback();
+    toast("Script loaded.");
+  }catch(e){
+    alert("Parse failed:\\n" + (e?.message || e));
   }
+}
 
   function exportCurrent() {
     const out = JSON.stringify(script || [], null, 2);
@@ -484,3 +487,42 @@
     bindUI();
   });
 })();
+/* === Simple Editor helpers === */
+function getEditorText(){
+  const ed = document.getElementById("scriptEditor");
+  return ed ? (ed.innerText || "").replace(/\r/g,"") : "";
+}
+function parseEditorToScript(){
+  const startSel = document.getElementById("startSpeaker");
+  const start = (startSel && startSel.value==="me") ? "me" : "friend";
+  const raw = getEditorText();
+  const blocks = raw.split(/\n{3,}/).map(s => s.replace(/^\s+|\s+$/g,"")).filter(Boolean);
+  let who = start; const out = [];
+  for(const text of blocks){ out.push({from:who, text}); who = (who==="me")?"friend":"me"; }
+  return out;
+}
+function colorizeEditor(){
+  const ed = document.getElementById("scriptEditor");
+  if(!ed) return;
+  const startSel = document.getElementById("startSpeaker");
+  const start = (startSel && startSel.value==="me") ? "me" : "friend";
+  const raw = getEditorText();
+  const parts = raw.split(/\n{3,}/);
+  let who = start; const frag=[];
+  for(let i=0;i<parts.length;i++){
+    const t = parts[i], safe = t.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+    frag.push(`<div class="block ${who}">${safe}</div>`);
+    who = (who==="me")?"friend":"me";
+    if(i<parts.length-1){ frag.push('<div><br></div><div><br></div><div><br></div>'); }
+  }
+  ed.innerHTML = frag.join("");
+  try{ ed.focus(); const r=document.createRange(); r.selectNodeContents(ed); r.collapse(false); const s=window.getSelection(); s.removeAllRanges(); s.addRange(r);}catch{}
+}
+/* re-color on input/toggle */
+document.addEventListener("DOMContentLoaded", ()=>{
+  const ed = document.getElementById("scriptEditor");
+  const st = document.getElementById("startSpeaker");
+  if(ed){ ed.addEventListener("input", colorizeEditor); colorizeEditor(); }
+  if(st){ st.addEventListener("change", colorizeEditor); }
+});
+

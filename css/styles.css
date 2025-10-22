@@ -151,3 +151,23 @@ textarea#scriptInput{
 
 /* Optional: nudge rows vertically tighter inside keyboard */
 .keyboard .kb-row + .kb-row{ margin-top:4px }
+/* ==== Simple Script Editor (blocks separated by 3 blank lines) ==== */
+.script-controls { display:grid; gap:8px; margin:8px 0 }
+.script-controls select {
+  background:#0b1216; color:#e9edef; border:1px solid #1c2930; padding:6px 8px; border-radius:8px; font-size:13px
+}
+.script-editor-hint { margin:6px 0 8px }
+.script-editor{
+  width:100%; min-height:280px; background:#0b1216; color:#e9edef;
+  border:1px solid #1c2930; border-radius:10px; padding:10px;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:13px;
+  white-space:pre-wrap; word-wrap:break-word; outline:none; overflow:auto;
+}
+.script-editor .block{ margin:0; padding:0 }
+.script-editor .block.me{ color:#93f9b9 }      /* green-ish for Me */
+.script-editor .block.friend{ color:#ffe066 }  /* yellow-ish for Friend */
+/* lighter caret visibility on dark background */
+.script-editor:focus{ box-shadow:0 0 0 1px #244 inset }
+
+/* tighten rows in keyboard if needed */
+.keyboard .kb-row + .kb-row{ margin-top:4px }

@@ -11,12 +11,20 @@
     <aside class="panel">
       <h2>Script</h2>
       <p class="hint">Paste your conversation JSON below and click <b>Load Script</b>.</p>
-      <textarea id="scriptInput" spellcheck="false">[
-  {"from":"friend","text":"Hey, are you coming today?"},
-  {"from":"me","text":"On the way! 10 mins."},
-  {"from":"friend","text":"Great. Don&apos;t be late."},
-  {"from":"me","text":"Promise."}
-]</textarea>
+            <div class="script-controls">
+        <label class="row">
+          <span>First speaker</span>
+          <select id="startSpeaker">
+            <option value="friend" selected>Friend starts</option>
+            <option value="me">Me starts</option>
+          </select>
+        </label>
+      </div>
+      <div class="script-editor-hint hint">
+        Type your story here. Separate each message with <b>3 blank lines</b> (press Enter 3×).
+        Green blocks = <b>Me</b>, Yellow blocks = <b>Friend</b>. They alternate automatically starting from your selection above.
+      </div>
+      <div id="scriptEditor" class="script-editor" contenteditable="true" spellcheck="false"></div>
       <div class="panel-actions">
         <button id="btnLoad">Load Script</button>
         <button id="btnExport">Export Current</button>
@@ -100,5 +108,6 @@
   <script src="js/app.js"></script>
 </body>
 </html>
+
 
 
