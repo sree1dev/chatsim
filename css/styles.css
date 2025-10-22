@@ -36,7 +36,7 @@ textarea#scriptInput{
 .phone{
   position:relative; flex:1; background:var(--bg);
   border:1px solid #1b2430; border-radius:18px; box-shadow:0 10px 40px var(--shadow);
-  display:grid; grid-template-rows:56px 28px 1fr auto auto; overflow:hidden
+  display:grid; $156px 1fr auto auto; overflow:hidden
 }
 .topbar{
   background:var(--top); display:flex; align-items:center; justify-content:space-between; padding:8px 12px; border-bottom:1px solid #1b2430
@@ -96,3 +96,58 @@ textarea#scriptInput{
 .chat::-webkit-scrollbar{width:7px}
 .chat::-webkit-scrollbar-thumb{background:#1a2a31; border-radius:6px}
 .topbar .right img.ic{width:22px;height:22px;vertical-align:middle;filter:invert(85%);opacity:.9}
+
+/* layout fix: keyboard */
+.keyboard{ align-content:center }
+.kb-row{ justify-content:center }
+/* ======= COMPACT TOPBAR + KEYBOARD (overrides) ======= */
+
+/* Thinner top bar */
+.topbar{
+  height:44px; min-height:44px;
+  padding:4px 8px;
+}
+.topbar .left{ gap:6px }
+.avatar{ width:26px; height:26px; font-size:13px }
+.name{ font-size:14px; line-height:1 }
+.status{ font-size:11px }
+.topbar .right .icon{ margin-left:8px }
+.topbar .right img.ic{ width:18px; height:18px; opacity:.9 }
+
+/* Adjust phone grid: header 44px, chat 1fr, typing auto, keyboard auto */
+.phone{ grid-template-rows:44px 1fr auto auto }
+
+/* Compact keyboard: no gaps, edge-to-edge, consistent row fill */
+.keyboard{
+  padding:4px 4px 6px;
+  background:#0f1c22;
+}
+.kb-row{
+  display:flex;
+  gap:0;                 /* no spaces between keys */
+  justify-content:stretch;
+}
+.key{
+  flex:1 1 0;            /* expand to fill row evenly */
+  min-width:0;
+  padding:6px 6px;       /* tighter */
+  border-radius:6px;
+  margin:0;              /* eliminate gaps */
+  text-align:center;
+  font-size:12px;
+  line-height:1.1;
+}
+.key.wide{ flex:1.6 1 0 }   /* ⇧, ⌫ slightly wider */
+.key.space{ flex:6 1 0 }    /* space bar much wider */
+
+/* Make the small display tighter too */
+.kb-screen{
+  width:100%;
+  margin:0 0 4px 0;
+  min-height:22px;
+  padding:4px 6px;
+  font-size:12px;
+}
+
+/* Optional: nudge rows vertically tighter inside keyboard */
+.keyboard .kb-row + .kb-row{ margin-top:4px }
