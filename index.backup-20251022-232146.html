@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>WhatsUpp — Chat Story Simulator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <div id="app">
+    <aside class="panel">
+      <h2>Script</h2>
+      <p class="hint">Paste your conversation JSON below and click <b>Load Script</b>.</p>
+      <textarea id="scriptInput" spellcheck="false">[
+  {"from":"friend","text":"Hey, are you coming today?"},
+  {"from":"me","text":"On the way! 10 mins."},
+  {"from":"friend","text":"Great. Don&apos;t be late."},
+  {"from":"me","text":"Promise."}
+]</textarea>
+      <div class="panel-actions">
+        <button id="btnLoad">Load Script</button>
+        <button id="btnExport">Export Current</button>
+      </div>
+
+      <h2>Settings</h2>
+      <div class="settings">
+        <label>Me typing speed (chars/sec)
+          <input id="meCps" type="number" min="1" max="50" value="14">
+        </label>
+        <label>Friend typing speed (chars/sec)
+          <input id="friendCps" type="number" min="1" max="50" value="12">
+        </label>
+        <label>My reading delay (ms per char)
+          <input id="meReadMs" type="number" min="0" max="1000" value="25">
+        </label>
+        <label>Friend reading delay (ms per char)
+          <input id="friendReadMs" type="number" min="0" max="1000" value="30">
+        </label>
+        <label>Global speed multiplier (0.25–3)
+          <input id="speedMult" type="number" min="0.25" max="3" step="0.05" value="1">
+        </label>
+        <label class="row">
+          <span>Show keyboard simulator</span>
+          <input id="showKb" type="checkbox" checked />
+        </label>
+        <label>Ticks style
+          <select id="ticksStyle">
+            <option value="single">Single ✓</option>
+            <option value="double">Double ✓✓</option>
+            <option value="blue" selected>Blue ✓✓</option>
+          </select>
+        </label>
+      </div>
+      <div class="panel-actions">
+        <button id="btnSaveSettings">Save Settings</button>
+        <button id="btnResetSettings">Reset Defaults</button>
+      </div>
+
+      <details class="help">
+        <summary>JSON format help</summary>
+        <pre>{
+  "from": "me" | "friend",
+  "text": "message text",
+  "delayMs":  optional extra delay before typing (number)
+}</pre>
+        <p>Reading delays are automatically calculated from the previous opposite-party message length × the "reading delay per char".</p>
+      </details>
+          <h2>Manglish → Malayalam</h2>
+      <p class="hint">Type Manglish below. Live Malayalam preview appears; click to insert into your script as a message.</p>
+      <textarea id="manglishInput" spellcheck="false" placeholder="ente per sreeyaanu, ini njan varunnu..."></textarea>
+      <div class="ml-preview-wrap">
+        <div id="mlPreview" class="ml-preview"></div>
+      </div>
+      <div class="panel-actions">
+        <button id="btnInsertMe">Insert as ME</button>
+        <button id="btnInsertFriend">Insert as FRIEND</button>
+      </div>
+
+
+    <main class="phone">
+      <header class="topbar">
+        <div class="left">
+          <div class="avatar">A</div>
+          <div>
+            <div class="name">Aisha</div>
+            <div class="status" id="topStatus">online</div>
+          </div>
+        </div>
+        <div class="right">
+          <span class="icon">📷</span>
+          <span class="icon">🔍</span>
+          <span class="icon">⋮</span>
+        </div>
+      </header>
+
+      <div class="brand">WhatsUpp</div>
+
+      <section id="chat" class="chat"></section>
+
+      <div id="typingIndicator" class="typing hidden">
+        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+      </div>
+
+      <footer class="controls">
+        <button id="btnPlay">▶ Play</button>
+        <button id="btnPause" disabled>⏸ Pause</button>
+        <button id="btnReset">⟲ Reset</button>
+      </footer>
+
+      <section id="keyboard" class="keyboard"></section>
+    </main>
+  </div>
+
+  System.Func`2[System.Text.RegularExpressions.Match,System.String]
+</body>
+</html>
+
+
+

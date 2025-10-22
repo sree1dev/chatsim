@@ -1,0 +1,97 @@
+:root{
+  --bg:#0b141a; --top:#202c33; --brand:#111b21; --me:#005c4b; --friend:#202c33; --text:#e9edef; --muted:#8696a0;
+  --blue:#34b7f1; --accent:#25d366; --bubble:#1f2c34; --kbd:#0f1c22; --shadow:rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Noto Sans", "Apple Color Emoji","Segoe UI Emoji";
+  color:var(--text); background:#0e1316;
+}
+#app{display:flex; gap:16px; padding:16px; height:100vh; overflow:hidden}
+.panel{
+  width:380px; min-width:320px; background:#0f171b; border:1px solid #1c282f; border-radius:14px; padding:14px; overflow:auto
+}
+.panel h2{margin:10px 0 8px; font-size:16px}
+.hint{color:var(--muted); font-size:12px; margin:4px 0 8px}
+textarea#scriptInput{
+  width:100%; height:260px; background:#0b1216; color:var(--text);
+  border:1px solid #1c2930; border-radius:10px; padding:10px; font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:13px
+}
+.panel-actions{display:flex; gap:8px; margin:8px 0 16px}
+.panel button{
+  background:#14323b; border:1px solid #1e3c45; color:#d8f3ff; padding:8px 10px; border-radius:10px; cursor:pointer
+}
+.panel button:disabled{opacity:.5; cursor:not-allowed}
+.settings{display:grid; gap:10px}
+.settings label{display:grid; gap:6px; font-size:13px}
+.settings input, .settings select{
+  background:#0b1216; color:var(--text); border:1px solid #1c2930; padding:8px; border-radius:8px
+}
+.settings .row{display:flex; align-items:center; justify-content:space-between}
+.help pre{
+  background:#0b1216; border:1px solid #1c2930; padding:10px; border-radius:8px; overflow:auto
+}
+
+.phone{
+  position:relative; flex:1; background:var(--bg);
+  border:1px solid #1b2430; border-radius:18px; box-shadow:0 10px 40px var(--shadow);
+  display:grid; grid-template-rows:56px 28px 1fr auto auto; overflow:hidden
+}
+.topbar{
+  background:var(--top); display:flex; align-items:center; justify-content:space-between; padding:8px 12px; border-bottom:1px solid #1b2430
+}
+.topbar .left{display:flex; gap:10px; align-items:center}
+.avatar{width:32px; height:32px; border-radius:50%; background:#2a3b45; display:grid; place-items:center; color:#bfefff; font-weight:700}
+.name{font-weight:700}
+.status{font-size:12px; color:var(--muted)}
+.topbar .right .icon{margin-left:10px; opacity:.9}
+
+.brand{height:28px; background:var(--brand); color:var(--muted); display:flex; align-items:center; padding:0 12px; font-size:12px; letter-spacing:.5px}
+
+.chat{padding:12px; display:flex; flex-direction:column; gap:8px; overflow:auto; background:url('assets/bg.png') center/cover fixed no-repeat}
+.bubble{
+  max-width:70%; padding:8px 10px; border-radius:12px; position:relative; font-size:14px; line-height:1.35; word-wrap:break-word; white-space:pre-wrap
+}
+.bubble.me{background:var(--me); margin-left:auto; border-top-right-radius:4px}
+.bubble.friend{background:var(--friend); margin-right:auto; border-top-left-radius:4px}
+.meta{display:flex; gap:6px; align-items:center; font-size:11px; color:#cfe8f7; opacity:.9; margin-top:4px}
+.ticks{font-size:12px; line-height:1}
+.ticks.blue{color:#89d5ff}
+.ticks.muted{color:#96a7b0}
+
+.typing{
+  padding:6px 10px; margin:0 12px 10px auto; width:68px; background:var(--bubble); border-radius:12px; display:flex; gap:6px; align-items:center
+}
+.typing.hidden{display:none}
+.dot{
+  width:6px; height:6px; border-radius:50%; background:#cfe8f7; opacity:.5; animation:b 1s infinite ease-in-out
+}
+.dot:nth-child(2){animation-delay:.2s}
+.dot:nth-child(3){animation-delay:.4s}
+@keyframes b{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-3px)}}
+
+.controls{
+  display:flex; gap:8px; padding:8px; background:#0e171c; border-top:1px solid #1b2430
+}
+.controls button{
+  background:#12333b; border:1px solid #1e3c45; color:#d8f3ff; padding:8px 12px; border-radius:10px; cursor:pointer
+}
+
+.keyboard{
+  background:var(--kbd); border-top:1px solid #1b2430; padding:8px 8px 14px; display:grid; gap:6px
+}
+.kb-row{display:flex; gap:6px; justify-content:center}
+.key{
+  min-width:28px; padding:8px 10px; background:#0b151a; border:1px solid #1c2930; border-radius:8px; text-align:center; font-size:13px; color:#cfe8f7; opacity:.85
+}
+.key.wide{min-width:64px}
+.key.space{min-width:180px}
+.key.active{background:#17343d; border-color:#2a5b66; transform:translateY(1px)}
+.kb-screen{
+  margin:0 auto 6px; width:96%; min-height:28px; background:#071015; border:1px solid #162229; border-radius:8px; padding:6px 8px; color:#e1f5ff; font-family:ui-monospace,Consolas,monospace; font-size:13px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap
+}
+
+/* scrollbar thin */
+.chat::-webkit-scrollbar{width:7px}
+.chat::-webkit-scrollbar-thumb{background:#1a2a31; border-radius:6px}
