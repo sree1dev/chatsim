@@ -54,7 +54,7 @@
       <div class="panel-actions">
         <button id="btnSaveSettings">Save Settings</button>
         <button id="btnResetSettings">Reset Defaults</button>
-      </div>
+      </div>`r`n<h2>Playback</h2><div class="panel-actions"><button id="btnPlay">▶ Play</button><button id="btnPause" disabled>⏸ Pause</button><button id="btnReset">⟲ Reset</button></div>
 
       <details class="help">
         <summary>JSON format help</summary>
@@ -77,25 +77,17 @@
           </div>
         </div>
         <div class="right">
-          <span class="icon">📷</span>
-          <span class="icon">🔍</span>
+          <span class="icon"><img src="assets/video.png" class="ic" alt="video"/></span>
+          <span class="icon"><img src="assets/call.png" class="ic" alt="call"/></span>
           <span class="icon">⋮</span>
         </div>
       </header>
-
-      <div class="brand">WhatsUpp</div>
 
       <section id="chat" class="chat"></section>
 
       <div id="typingIndicator" class="typing hidden">
         <span class="dot"></span><span class="dot"></span><span class="dot"></span>
       </div>
-
-      <footer class="controls">
-        <button id="btnPlay">▶ Play</button>
-        <button id="btnPause" disabled>⏸ Pause</button>
-        <button id="btnReset">⟲ Reset</button>
-      </footer>
 
       <section id="keyboard" class="keyboard"></section>
     </main>
@@ -104,3 +96,4 @@
   <script src="js/app.js"></script>
 </body>
 </html>
+

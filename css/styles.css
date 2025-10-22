@@ -95,3 +95,4 @@ textarea#scriptInput{
 /* scrollbar thin */
 .chat::-webkit-scrollbar{width:7px}
 .chat::-webkit-scrollbar-thumb{background:#1a2a31; border-radius:6px}
+.topbar .right img.ic{width:22px;height:22px;vertical-align:middle;filter:invert(85%);opacity:.9}
