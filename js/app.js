@@ -92,7 +92,7 @@ const layout = [
   "` 1 2 3 4 5 6 7 8 9 0 - =".split(" "),
   "q w e r t y u i o p [ ] \\".split(" "),
   "a s d f g h j k l ; '".split(" "),
-  ["⇧","z","x","c","v","b","n","m",",",".","/","⌫"],
+  ["⇧","z","x","c","v","b","n","m","മ",",",".","/","⌫"],
   ["⎵"]
 ];
 
@@ -168,24 +168,21 @@ function readingDelayMs(forReader, againstLength){
 /** ------------------ Playback Engine ------------------ */
 
 async function typeMessage(sender, text, token){
-  // show typing indicator when friend types
+  // If Malayalam present, animate Manglish keystrokes while bubble shows original
+  const hasMalayalam = /[\u0D00-\u0D7F]/.test(text);
+  const keysToPress = hasMalayalam ? malToManglish(text) : text;
+
   if(sender === "friend"){
     els.typing.classList.remove("hidden");
     els.topStatus.textContent = "typing…";
   }
-
-  // Fake per-char typing
-  for(const ch of text){
+  for(const ch of keysToPress){
     if(token.cancel) return;
     pressKeyVisual(ch);
     kbAppend(ch);
     await sleep(charDelay(sender), token);
   }
-
-  // Clear kb screen after a message is committed
   kbScreen.textContent = "";
-
-  // commit bubble
   addBubble({from: sender, text});
   if(sender === "friend"){
     els.typing.classList.add("hidden");
@@ -328,5 +325,30 @@ function toast(msg){
   console.log(msg);
 }
 
+
+  /* ===== Malayalam → Manglish (for keyboard animation only) ===== */
+  function malToManglish(txt){
+    const VOW_INDEP = {"അ":"a","ആ":"aa","ഇ":"i","ഈ":"ee","ഉ":"u","ഊ":"oo","എ":"e","ഏ":"e","ഐ":"ai","ഒ":"o","ഓ":"o","ഔ":"au","ഋ":"ri"};
+    const VOW_SIGNS = {"ാ":"a","ി":"i","ീ":"ee","ു":"u","ൂ":"oo","െ":"e","േ":"e","ൈ":"ai","ൊ":"o","ോ":"o","ൗ":"au","ൃ":"ri"};
+    const CONS = {"ക":"k","ഖ":"kh","ഗ":"g","ഘ":"gh","ങ":"ng","ച":"ch","ഛ":"chh","ജ":"j","ഝ":"jh","ഞ":"nj","ട":"t","ഠ":"th","ഡ":"d","ഢ":"dh","ണ":"n","ത":"th","ഥ":"thh","ദ":"d","ധ":"dh","ന":"n","പ":"p","ഫ":"ph","ബ":"b","ഭ":"bh","മ":"m","യ":"y","ര":"r","ല":"l","വ":"v","ശ":"sh","ഷ":"sh","സ":"s","ഹ":"h","ഴ":"zh","ള":"l","റ":"rr"};
+    const VIR = "്";
+    let out = "";
+    for(let i=0;i<txt.length;i++){
+      const ch = txt[i];
+      if(VOW_INDEP[ch]){ out += VOW_INDEP[ch]; continue; }
+      if(CONS[ch]){
+        const base = CONS[ch];
+        const next = txt[i+1]||"";
+        if(next===VIR){ out += base; i++; continue; }
+        if(VOW_SIGNS[next]){ out += base + VOW_SIGNS[next]; i++; continue; }
+        out += base + "a";
+        continue;
+      }
+      if(VOW_SIGNS[ch]){ out += VOW_SIGNS[ch]; continue; }
+      out += ch;
+    }
+    return out;
+  }
 /** End IIFE */
 })();
+
