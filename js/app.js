@@ -493,12 +493,17 @@ function getEditorText(){
   return ed ? (ed.innerText || "").replace(/\r/g,"") : "";
 }
 function parseEditorToScript(){
-  const startSel = document.getElementById("startSpeaker");
-  const start = (startSel && startSel.value==="me") ? "me" : "friend";
+  const startSel = document.getElementById('startSpeaker');
+  const start = (startSel && startSel.value === 'me') ? 'me' : 'friend';
   const raw = getEditorText();
-  const blocks = raw.split(/\n{3,}/).map(s => s.replace(/^\s+|\s+$/g,"")).filter(Boolean);
-  let who = start; const out = [];
-  for(const text of blocks){ out.push({from:who, text}); who = (who==="me")?"friend":"me"; }
+
+  const blocks = raw.split(/\n{3,}/).map(s => s.trim()).filter(Boolean);
+  let who = start;
+  const out = [];
+  for (const text of blocks) {
+    out.push({ from: who, text });
+    who = (who === 'me') ? 'friend' : 'me';
+  }
   return out;
 }
 function colorizeEditor(){
@@ -526,3 +531,46 @@ document.addEventListener("DOMContentLoaded", ()=>{
   if(st){ st.addEventListener("change", colorizeEditor); }
 });
 
+
+function getPlainTextLength(root){
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null);
+  let len = 0, n;
+  while(n = walker.nextNode()){ len += n.nodeValue.length; }
+  return len;
+}
+function getCaretOffsetIn(root){
+  try{
+    const sel = window.getSelection();
+    if(!sel || sel.rangeCount === 0) return getPlainTextLength(root);
+    const range = sel.getRangeAt(0);
+    const pre = document.createRange();
+    pre.selectNodeContents(root);
+    pre.setEnd(range.endContainer, range.endOffset);
+    return pre.toString().length;
+  }catch(_){ return getPlainTextLength(root) }
+}
+function setCaretOffsetIn(root, offset){
+  try{
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null);
+    let n, pos=0;
+    while(n = walker.nextNode()){
+      const nextPos = pos + n.nodeValue.length;
+      if(offset <= nextPos){
+        const sel = window.getSelection();
+        const range = document.createRange();
+        range.setStart(n, Math.max(0, offset - pos));
+        range.collapse(true);
+        sel.removeAllRanges();
+        sel.addRange(range);
+        return;
+      }
+      pos = nextPos;
+    }
+    const sel = window.getSelection();
+    const range = document.createRange();
+    range.selectNodeContents(root);
+    range.collapse(false);
+    sel.removeAllRanges();
+    sel.addRange(range);
+  }catch(_){}
+}
