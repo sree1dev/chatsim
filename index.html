@@ -10,8 +10,9 @@
   <div id="app">
     <aside class="panel">
       <h2>Script</h2>
-      <p class="hint">Paste your conversation JSON below and click <b>Load Script</b>.</p>
-            <div class="script-controls">
+      <p class="hint">Paste your conversation JSON below or use the editor. Click <b>Load Script</b> to send it to the player.</p>
+
+      <div class="script-controls">
         <label class="row">
           <span>First speaker</span>
           <select id="startSpeaker">
@@ -20,15 +21,18 @@
           </select>
         </label>
       </div>
+
       <div class="script-editor-hint hint">
-        Type your story here. Separate each message with <b>3 blank lines</b> (press Enter 3×).
-        Green blocks = <b>Me</b>, Yellow blocks = <b>Friend</b>. They alternate automatically starting from your selection above.
+        Type your story in chat bubbles. Use the <b>First speaker</b> dropdown, then press <b>Tab</b> to insert the next bubble for the other person (Friend ⇄ Me). Click a bubble to edit. When ready, click <b>Load Script</b> to send the bubbles to the player.
       </div>
+
       <div id="scriptEditor" class="script-editor" contenteditable="true" spellcheck="false"></div>
+
       <div class="panel-actions">
         <button id="btnLoad">Load Script</button>
         <button id="btnExport">Export Current</button>
       </div>
+
       <h2>Playback</h2>
       <div class="panel-actions">
         <button id="btnPlay">▶ Play</button>
@@ -65,17 +69,19 @@
           </select>
         </label>
       </div>
+
       <div class="panel-actions">
         <button id="btnSaveSettings">Save Settings</button>
         <button id="btnResetSettings">Reset Defaults</button>
-      </div>`r`n<details class="help">
+      </div>
+
+      <details class="help">
         <summary>JSON format help</summary>
-        <pre>{
-  "from": "me" | "friend",
-  "text": "message text",
-  "delayMs":  optional extra delay before typing (number)
-}</pre>
-        <p>Reading delays are automatically calculated from the previous opposite-party message length × the "reading delay per char".</p>
+        <pre>[
+  { "from": "friend", "text": "Hey" },
+  { "from": "me",     "text": "Hi!"   }
+]</pre>
+        <p>Reading delays are automatically computed based on the previous opposite-party message length × the per-char delay.</p>
       </details>
     </aside>
 
@@ -108,6 +114,3 @@
   <script src="js/app.js"></script>
 </body>
 </html>
-
-
-

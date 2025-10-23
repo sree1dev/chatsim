@@ -39,9 +39,7 @@
   /** ========== UI Helpers ========== */
   function nowTime() {
     const d = new Date();
-    return `${String(d.getHours()).padStart(2, "0")}:${String(
-      d.getMinutes()
-    ).padStart(2, "0")}`;
+    return `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
   }
 
   function bubble({ from, text, time }) {
@@ -58,8 +56,7 @@
     if (from === "me") {
       const tk = document.createElement("span");
       const style = settings.ticksStyle;
-      tk.className =
-        "ticks " + (style === "blue" ? "blue" : style === "single" ? "muted" : "");
+      tk.className = "ticks " + (style === "blue" ? "blue" : style === "single" ? "muted" : "");
       tk.textContent = style === "single" ? "✓" : "✓✓";
       meta.appendChild(tk);
     }
@@ -136,76 +133,17 @@
   /** ========== Malayalam → Manglish (WhatsApp-realistic) ========== */
   function malToManglish(txt) {
     const VOW_INDEP = {
-      "അ": "a",
-      "ആ": "aa",
-      "ഇ": "i",
-      "ഈ": "ee",
-      "ഉ": "u",
-      "ഊ": "oo",
-      "എ": "e",
-      "ഏ": "e",
-      "ഐ": "ai",
-      "ഒ": "o",
-      "ഓ": "o",
-      "ഔ": "au",
-      "ഋ": "ri",
+      "അ": "a","ആ": "aa","ഇ": "i","ഈ": "ee","ഉ": "u","ഊ": "oo",
+      "എ": "e","ഏ": "e","ഐ": "ai","ഒ": "o","ഓ": "o","ഔ": "au","ഋ": "ri",
     };
     const VOW_SIGNS = {
-      "ാ": "a",
-      "ി": "i",
-      "ീ": "ee",
-      "ു": "u",
-      "ൂ": "oo",
-      "െ": "e",
-      "േ": "e",
-      "ൈ": "ai",
-      "ൊ": "o",
-      "ോ": "o",
-      "ൗ": "au",
-      "ൃ": "ri",
+      "ാ": "a","ി": "i","ീ": "ee","ു": "u","ൂ": "oo","െ": "e","േ": "e","ൈ": "ai","ൊ": "o","ോ": "o","ൗ": "au","ൃ": "ri",
     };
     const CONS = {
-      "ക": "k",
-      "ഖ": "kh",
-      "ഗ": "g",
-      "ഘ": "gh",
-      "ങ": "ng",
-      "ച": "ch",
-      "ഛ": "chh",
-      "ജ": "j",
-      "ഝ": "jh",
-      "ഞ": "nj",
-      "ട": "d", // retroflex ta -> d (realistic typing)
-      "ഠ": "dh",
-      "ഡ": "d",
-      "ഢ": "dh",
-      "ണ": "n",
-      "ത": "th",
-      "ഥ": "thh",
-      "ദ": "d",
-      "ധ": "dh",
-      "ന": "n",
-      "പ": "p",
-      "ഫ": "ph",
-      "ബ": "b",
-      "ഭ": "bh",
-      "മ": "m",
-      "യ": "y",
-      "ര": "r",
-      "ല": "l",
-      "വ": "v",
-      "ശ": "sh",
-      "ഷ": "sh",
-      "സ": "s",
-      "ഹ": "h",
-      "ഴ": "zh",
-      "ള": "l",
-      "റ": "r",
-      "ൺ": "n",
-      "ൻ": "n",
-      "ർ": "r",
-      "ൽ": "l",
-      "ൾ": "l",
+      "ക":"k","ഖ":"kh","ഗ":"g","ഘ":"gh","ങ":"ng","ച":"ch","ഛ":"chh","ജ":"j","ഝ":"jh","ഞ":"nj",
+      "ട":"d","ഠ":"dh","ഡ":"d","ഢ":"dh","ണ":"n","ത":"th","ഥ":"thh","ദ":"d","ധ":"dh","ന":"n",
+      "പ":"p","ഫ":"ph","ബ":"b","ഭ":"bh","മ":"m","യ":"y","ര":"r","ല":"l","വ":"v","ശ":"sh","ഷ":"sh","സ":"s","ഹ":"h","ഴ":"zh","ള":"l","റ":"r",
+      "ൺ":"n","ൻ":"n","ർ":"r","ൽ":"l","ൾ":"l",
     };
     const VIR = "്";
     let out = "";
@@ -214,64 +152,34 @@
       const ch = txt[i];
       const next = txt[i + 1] || "";
 
-      // independent vowels
-      if (VOW_INDEP[ch]) {
-        out += VOW_INDEP[ch];
-        continue;
-      }
+      if (VOW_INDEP[ch]) { out += VOW_INDEP[ch]; continue; }
+      if ((ch === "ണ" || ch === "ന") && next === "്ട") { out += "nt"; i++; continue; }
 
-      // conjunct cluster: ണ്ട / ന്ട  -> nt
-      if ((ch === "ണ" || ch === "ന") && next === "്ട") {
-        out += "nt";
-        i++;
-        continue;
-      }
-
-      // consonants
       if (CONS[ch]) {
         const base = CONS[ch];
-        if (next === VIR) {
-          out += base; // dead consonant
-          i++;
-          continue;
-        }
-        if (VOW_SIGNS[next]) {
-          out += base + VOW_SIGNS[next];
-          i++;
-          continue;
-        }
-        out += base + "a"; // inherent 'a'
-        continue;
+        if (next === VIR) { out += base; i++; continue; }
+        if (VOW_SIGNS[next]) { out += base + VOW_SIGNS[next]; i++; continue; }
+        out += base + "a"; continue;
       }
 
-      // vowel sign standing alone
-      if (VOW_SIGNS[ch]) {
-        out += VOW_SIGNS[ch];
-        continue;
-      }
+      if (VOW_SIGNS[ch]) { out += VOW_SIGNS[ch]; continue; }
 
-      // space/punct
       out += ch;
     }
 
-    // cleanup
-    out = out.replace(/thh/g, "th") // normalize double h
-             .replace(/([eiou])a(\b|[^a-z])/gi, "$1$2"); // keep final "aa" (do not trim)
+    out = out.replace(/thh/g, "th")
+             .replace(/([eiou])a(\b|[^a-z])/gi, "$1$2");
     return out;
   }
 
   /** ========== Timing ========== */
-  const sleep = (ms, token) =>
-    new Promise((res) => {
-      if (token.cancel) return res();
-      setTimeout(res, ms);
-    });
+  const sleep = (ms, token) => new Promise((res) => { if (token.cancel) return res(); setTimeout(res, ms); });
 
   function charDelay(sender) {
     const cps = sender === "me" ? settings.meCps : settings.friendCps;
     const base = 1000 / Math.max(1, cps);
     return base / Math.max(0.1, settings.speedMult);
-    }
+  }
 
   function readingDelayMs(forReader, againstLength) {
     const perChar = forReader === "me" ? settings.meReadMs : settings.friendReadMs;
@@ -322,7 +230,6 @@
     while (idx < script.length && !cancelToken.cancel) {
       const m = script[idx];
 
-      // pre-delay: reading + optional delayMs
       let preDelay = 0;
       if (lastSender && lastSender !== m.from) {
         preDelay = readingDelayMs(m.from, lastOppMsgLen);
@@ -337,11 +244,7 @@
 
       await typeMessage(m.from, m.text, cancelToken);
 
-      if (!lastSender) {
-        lastOppMsgLen = m.text.length;
-      } else if (lastSender !== m.from) {
-        lastOppMsgLen = m.text.length;
-      }
+      if (!lastSender || lastSender !== m.from) lastOppMsgLen = m.text.length;
       lastSender = m.from;
 
       idx++;
@@ -374,31 +277,30 @@
 
   /** ========== Script I/O ========== */
   function loadScriptFromTextarea() {
-  try{
-    if(document.getElementById("scriptEditor")){
-      script = parseEditorToScript();
-    } else {
-      const ta = (typeof els!=="undefined" && els.scriptInput) ? els.scriptInput : document.getElementById("scriptInput");
-      const data = JSON.parse(ta.value);
-      if(!Array.isArray(data)) throw new Error("Script must be an array.");
-      for(const m of data){
-        if(m.from!=="me" && m.from!=="friend") throw new Error("Each item needs from:'me'|'friend'");
-        if(typeof m.text!=="string") throw new Error("Each item needs text:string");
+    try{
+      // Prefer editor bubbles if present
+      if (document.getElementById("scriptEditor")) {
+        script = parseEditorToScript();
+      } else {
+        const ta = (typeof els!=="undefined" && els.scriptInput) ? els.scriptInput : document.getElementById("scriptInput");
+        const data = JSON.parse(ta.value);
+        if(!Array.isArray(data)) throw new Error("Script must be an array.");
+        for(const m of data){
+          if(m.from!=="me" && m.from!=="friend") throw new Error("Each item needs from:'me'|'friend'");
+          if(typeof m.text!=="string") throw new Error("Each item needs text:string");
+        }
+        script = data;
       }
-      script = data;
+      resetPlayback();
+      toast("Script loaded.");
+    }catch(e){
+      alert("Parse failed:\n" + (e?.message || e));
     }
-    resetPlayback();
-    toast("Script loaded.");
-  }catch(e){
-    alert("Parse failed:\\n" + (e?.message || e));
   }
-}
 
   function exportCurrent() {
     const out = JSON.stringify(script || [], null, 2);
-    try {
-      navigator.clipboard?.writeText(out);
-    } catch {}
+    try { navigator.clipboard?.writeText(out); } catch {}
     const w = window.open("", "_blank");
     w.document.write("<pre>" + escapeHtml(out) + "</pre>");
     w.document.close();
@@ -420,10 +322,10 @@
   }
 
   function bindUI() {
-    if (els.btnPlay) els.btnPlay.addEventListener("click", () => { paused = false; playFromCurrent(); });
-    if (els.btnPause) els.btnPause.addEventListener("click", () => pausePlayback());
-    if (els.btnReset) els.btnReset.addEventListener("click", () => resetPlayback());
-    if (els.btnLoad) els.btnLoad.addEventListener("click", () => loadScriptFromTextarea());
+    if (els.btnPlay)   els.btnPlay.addEventListener("click", () => { paused = false; playFromCurrent(); });
+    if (els.btnPause)  els.btnPause.addEventListener("click", () => pausePlayback());
+    if (els.btnReset)  els.btnReset.addEventListener("click", () => resetPlayback());
+    if (els.btnLoad)   els.btnLoad.addEventListener("click", () => loadScriptFromTextarea());
     if (els.btnExport) els.btnExport.addEventListener("click", () => exportCurrent());
 
     if (els.btnSaveSettings)
@@ -437,6 +339,9 @@
         settings.ticksStyle = els.ticksStyle.value;
         saveSettings();
         toast("Settings saved.");
+        // (re)build keyboard visibility immediately
+        if (settings.showKb && els.keyboard && els.keyboard.childElementCount === 0) buildKeyboard();
+        if (!settings.showKb && els.keyboard) els.keyboard.innerHTML = "";
       });
 
     if (els.btnResetSettings)
@@ -448,9 +353,7 @@
       });
   }
 
-  function toast(msg) {
-    console.log(msg);
-  }
+  function toast(msg) { console.log(msg); }
 
   /** ========== Init on DOM Ready ========== */
   document.addEventListener("DOMContentLoaded", () => {
@@ -479,98 +382,91 @@
 
     settings = loadSettings();
     applySettingsToInputs();
-    buildKeyboard();
-    // pre-load any JSON present
-    if (els.scriptInput && els.scriptInput.value.trim().startsWith("[")) {
+
+    if (settings.showKb) buildKeyboard();
+
+    // pre-load any JSON present (optional)
+    if (els.scriptInput && els.scriptInput.value?.trim().startsWith("[")) {
       try { script = JSON.parse(els.scriptInput.value); } catch (_) {}
     }
+
     bindUI();
+    initTabChatEditor(); // << enable new editor
   });
-})();
-/* === Simple Editor helpers === */
-function getEditorText(){
-  const ed = document.getElementById("scriptEditor");
-  return ed ? (ed.innerText || "").replace(/\r/g,"") : "";
-}
-function parseEditorToScript(){
-  const startSel = document.getElementById('startSpeaker');
-  const start = (startSel && startSel.value === 'me') ? 'me' : 'friend';
-  const raw = getEditorText();
 
-  const blocks = raw.split(/\n{3,}/).map(s => s.trim()).filter(Boolean);
-  let who = start;
-  const out = [];
-  for (const text of blocks) {
-    out.push({ from: who, text });
-    who = (who === 'me') ? 'friend' : 'me';
+  /* ================= TAB-TO-SWITCH CHAT EDITOR ================= */
+
+  function _edCurrentSpeaker(){
+    const s = document.getElementById("startSpeaker");
+    return (s && s.value === "me") ? "me" : "friend";
   }
-  return out;
-}
-function colorizeEditor(){
-  const ed = document.getElementById("scriptEditor");
-  if(!ed) return;
-  const startSel = document.getElementById("startSpeaker");
-  const start = (startSel && startSel.value==="me") ? "me" : "friend";
-  const raw = getEditorText();
-  const parts = raw.split(/\n{3,}/);
-  let who = start; const frag=[];
-  for(let i=0;i<parts.length;i++){
-    const t = parts[i], safe = t.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
-    frag.push(`<div class="block ${who}">${safe}</div>`);
-    who = (who==="me")?"friend":"me";
-    if(i<parts.length-1){ frag.push('<div><br></div><div><br></div><div><br></div>'); }
+  function _edOther(from){ return from === "me" ? "friend" : "me"; }
+  function _edPlaceEnd(node){
+    try{
+      const r = document.createRange(); r.selectNodeContents(node); r.collapse(false);
+      const sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r);
+    }catch{}
   }
-  ed.innerHTML = frag.join("");
-  try{ ed.focus(); const r=document.createRange(); r.selectNodeContents(ed); r.collapse(false); const s=window.getSelection(); s.removeAllRanges(); s.addRange(r);}catch{}
-}
-/* re-color on input/toggle */
-document.addEventListener("DOMContentLoaded", ()=>{
-  const ed = document.getElementById("scriptEditor");
-  const st = document.getElementById("startSpeaker");
-  if(ed){ ed.addEventListener("input", colorizeEditor); colorizeEditor(); }
-  if(st){ st.addEventListener("change", colorizeEditor); }
-});
+  function _edMakeMsg(from, text){
+    const el = document.createElement("div");
+    el.className = "msg " + (from === "me" ? "me" : "friend");
+    el.contentEditable = "true"; el.spellcheck = false;
+    el.dataset.from = (from === "me") ? "me" : "friend";
+    el.textContent = text || "";
+    el.addEventListener("click", ()=>_edPlaceEnd(el));
+    return el;
+  }
 
+  function initTabChatEditor(){
+    const ed = document.getElementById("scriptEditor");
+    if(!ed) return;
 
-function getPlainTextLength(root){
-  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null);
-  let len = 0, n;
-  while(n = walker.nextNode()){ len += n.nodeValue.length; }
-  return len;
-}
-function getCaretOffsetIn(root){
-  try{
-    const sel = window.getSelection();
-    if(!sel || sel.rangeCount === 0) return getPlainTextLength(root);
-    const range = sel.getRangeAt(0);
-    const pre = document.createRange();
-    pre.selectNodeContents(root);
-    pre.setEnd(range.endContainer, range.endOffset);
-    return pre.toString().length;
-  }catch(_){ return getPlainTextLength(root) }
-}
-function setCaretOffsetIn(root, offset){
-  try{
-    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null);
-    let n, pos=0;
-    while(n = walker.nextNode()){
-      const nextPos = pos + n.nodeValue.length;
-      if(offset <= nextPos){
-        const sel = window.getSelection();
-        const range = document.createRange();
-        range.setStart(n, Math.max(0, offset - pos));
-        range.collapse(true);
-        sel.removeAllRanges();
-        sel.addRange(range);
-        return;
-      }
-      pos = nextPos;
+    // Clear any legacy content (if someone pasted text)
+    if (ed.childElementCount === 0) {
+      ed.innerHTML = "";
+      ed.appendChild(_edMakeMsg(_edCurrentSpeaker(), ""));
+      _edPlaceEnd(ed.lastElementChild);
     }
-    const sel = window.getSelection();
-    const range = document.createRange();
-    range.selectNodeContents(root);
-    range.collapse(false);
-    sel.removeAllRanges();
-    sel.addRange(range);
-  }catch(_){}
-}
+
+    // TAB inserts opposite-speaker bubble
+    ed.addEventListener("keydown", (e)=>{
+      if(e.key === "Tab"){
+        e.preventDefault();
+        const sel = window.getSelection();
+        let n = sel && sel.anchorNode ? sel.anchorNode : null;
+        while(n && n !== ed && !(n.classList && n.classList.contains("msg"))) n = n.parentNode;
+        const active = (n && n.classList && n.classList.contains("msg")) ? n : ed.lastElementChild;
+        const from = active && active.dataset.from ? active.dataset.from : _edCurrentSpeaker();
+        const next = _edMakeMsg(_edOther(from), "");
+        ed.appendChild(next);
+        _edPlaceEnd(next);
+      }
+    });
+
+    // Flip first empty bubble when dropdown changes
+    const sel = document.getElementById("startSpeaker");
+    if(sel){
+      sel.addEventListener("change", ()=>{
+        const first = ed.firstElementChild;
+        if(first && first.classList.contains("msg") && (first.textContent || "").trim()===""){
+          const from = _edCurrentSpeaker();
+          first.dataset.from = from;
+          first.classList.remove("me","friend");
+          first.classList.add(from === "me" ? "me" : "friend");
+        }
+      });
+    }
+  }
+
+  function parseEditorToScript(){
+    const ed = document.getElementById("scriptEditor"); if(!ed) return [];
+    const out = [];
+    for(const m of ed.querySelectorAll(".msg")){
+      const from = (m.dataset.from === "me") ? "me" : "friend";
+      const text = (m.textContent || "").replace(/\r/g,"").trim();
+      if(text) out.push({ from, text });
+    }
+    return out;
+  }
+
+})();
